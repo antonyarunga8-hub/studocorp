@@ -1,0 +1,13 @@
+{
+  "name": "studocorp",
+  "version": "1.0.0",
+  "description": "StudoCorp — Student Travel Tracking Web App",
+  "main": "index.html",
+  "scripts": {
+    "start": "open index.html",
+    "lint": "echo 'No build step needed — pure HTML/CSS/JS'"
+  },
+  "keywords": ["student-travel", "tracking", "kenya", "nairobi", "studocorp"],
+  "author": "StudoCorp",
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudoCorp — Personalized Efficiency in Student Travel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #7ED321;
+      --dark-green: #4a8c0f;
+      --black: #0c0f0a;
+      --card-bg: #141914;
+      --surface: #1a1f18;
+      --border: rgba(126,211,33,0.15);
+      --text: #e8ede3;
+      --muted: #8a9485;
+      --white: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 5%;
+      background: rgba(12,15,10,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      display: flex; align-items: center; gap: 0.6rem;
+    }
+    .logo-mark {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: var(--green);
+      display: grid; place-items: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      color: var(--black);
+    }
+    .logo-text { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.2rem; }
+    .logo-text span { color: var(--green); }
+
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      transition: color .2s;
+    }
+    nav ul a:hover { color: var(--green); }
+    .nav-cta {
+      background: var(--green); color: var(--black);
+      padding: 0.55rem 1.4rem; border-radius: 6px;
+      font-weight: 700; font-size: 0.88rem;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity: .85; }
+    .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+    .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 7rem 5% 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(126,211,33,0.1); border: 1px solid var(--border);
+      padding: 0.35rem 0.9rem; border-radius: 50px;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 1.4rem;
+    }
+    .hero-tag::before { content:''; width:7px; height:7px; border-radius:50%; background:var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.3} }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.08;
+      margin-bottom: 1.4rem;
+    }
+    h1 em { font-style: normal; color: var(--green); }
+
+    .hero-body {
+      font-size: 1.05rem; color: var(--muted);
+      line-height: 1.7; margin-bottom: 2.2rem; max-width: 480px;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--green); color: var(--black);
+      padding: 0.85rem 2rem; border-radius: 8px;
+      font-weight: 700; font-size: 0.95rem; text-decoration: none;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-primary:hover { opacity: .88; transform: translateY(-2px); }
+    .btn-outline {
+      border: 1px solid var(--border); color: var(--text);
+      padding: 0.85rem 2rem; border-radius: 8px;
+      font-weight: 500; font-size: 0.95rem; text-decoration: none;
+      transition: border-color .2s, transform .2s;
+    }
+    .btn-outline:hover { border-color: var(--green); transform: translateY(-2px); }
+
+    .hero-stats {
+      display: flex; gap: 2rem; margin-top: 3rem;
+    }
+    .stat { }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800; color: var(--green);
+    }
+    .stat-lbl { font-size: 0.78rem; color: var(--muted); margin-top: .2rem; }
+
+    /* Hero visual */
+    .hero-visual {
+      position: relative; display: flex; justify-content: center;
+    }
+    .tracker-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.8rem;
+      width: 340px;
+      animation: floatCard 5s ease-in-out infinite;
+    }
+    @keyframes floatCard { 0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)} }
+    .tracker-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.85rem; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--green); margin-bottom: 1.2rem;
+    }
+    .student-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .7rem 0; border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .student-row:last-child { border-bottom: none; }
+    .s-name { font-size: .9rem; font-weight: 500; }
+    .s-sub { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
+    .s-badge {
+      font-size: .7rem; padding: .25rem .65rem; border-radius: 50px;
+      font-weight: 600;
+    }
+    .badge-transit { background: rgba(126,211,33,.15); color: var(--green); }
+    .badge-arrived { background: rgba(52,199,89,.15); color: #34c759; }
+    .badge-boarding { background: rgba(255,159,10,.15); color: #ff9f0a; }
+
+    .map-preview {
+      margin-top: 1.4rem; border-radius: 12px; overflow:hidden;
+      height: 110px; background: var(--surface);
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .map-preview svg { opacity: .6; }
+    .map-dot {
+      position: absolute; width: 12px; height: 12px;
+      background: var(--green); border-radius: 50%;
+      border: 2px solid var(--black);
+      animation: moveDot 4s linear infinite;
+    }
+    @keyframes moveDot { 0%{left:20%;top:60%}50%{left:65%;top:30%}100%{left:20%;top:60%} }
+
+    .floating-badge {
+      position: absolute; top: -16px; right: -20px;
+      background: var(--green); color: var(--black);
+      padding: .5rem .9rem; border-radius: 10px;
+      font-size: .75rem; font-weight: 700;
+    }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 6rem 5%; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      font-size: .78rem; text-transform: uppercase;
+      letter-spacing: .1em; color: var(--green);
+      font-weight: 600; margin-bottom: .8rem;
+    }
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1rem;
+    }
+    .section-sub {
+      font-size: 1rem; color: var(--muted);
+      line-height: 1.7; max-width: 520px;
+    }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: var(--surface); }
+    .steps-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem; margin-top: 3rem;
+    }
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 2rem;
+      transition: border-color .3s, transform .3s;
+    }
+    .step-card:hover { border-color: var(--green); transform: translateY(-4px); }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem; font-weight: 800;
+      color: rgba(126,211,33,.2); margin-bottom: 1rem;
+    }
+    .step-card h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 700; margin-bottom: .6rem;
+    }
+    .step-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── FEATURES ── */
+    .features-layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center; margin-top: 3rem;
+    }
+    .feature-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .feature-item {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1.4rem; border-radius: 12px;
+      border: 1px solid transparent;
+      cursor: pointer; transition: border-color .2s, background .2s;
+    }
+    .feature-item:hover, .feature-item.active {
+      border-color: var(--border);
+      background: var(--card-bg);
+    }
+    .feature-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(126,211,33,.12);
+      display: grid; place-items: center; flex-shrink: 0;
+      font-size: 1.2rem;
+    }
+    .feature-item h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700; margin-bottom: .3rem;
+    }
+    .feature-item p { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+
+    .feature-visual {
+      background: var(--card-bg);
+      border: 1px solid var(--border); border-radius: 20px;
+      padding: 2rem; min-height: 380px;
+      display: flex; flex-direction: column; gap: 1rem;
+    }
+    .fv-header {
+      font-family: 'Syne', sans-serif;
+      font-size: .8rem; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--green);
+    }
+    .bus-route {
+      display: flex; flex-direction: column; gap: .8rem; margin-top: .5rem;
+    }
+    .route-stop {
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .stop-dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      border: 2px solid var(--green); flex-shrink: 0;
+    }
+    .stop-dot.filled { background: var(--green); }
+    .stop-line {
+      width: 2px; height: 24px; background: rgba(126,211,33,.3);
+      margin-left: 5px;
+    }
+    .stop-name { font-size: .9rem; }
+    .stop-time { font-size: .78rem; color: var(--muted); margin-left: auto; }
+    .progress-bar {
+      height: 6px; background: rgba(255,255,255,.07);
+      border-radius: 3px; margin-top: .5rem;
+    }
+    .progress-fill {
+      height: 100%; width: 62%; background: var(--green);
+      border-radius: 3px;
+      transition: width 1s ease;
+    }
+
+    /* ── PARTNERS / FOR WHO ── */
+    #audience { background: var(--surface); }
+    .audience-cards {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .aud-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 2.2rem; text-align: center;
+      transition: border-color .3s, transform .3s;
+    }
+    .aud-card:hover { border-color: var(--green); transform: translateY(-4px); }
+    .aud-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .aud-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem; font-weight: 700; margin-bottom: .6rem;
+    }
+    .aud-card p { font-size: .88rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── PRICING ── */
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .price-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 2rem; position: relative;
+      transition: border-color .3s;
+    }
+    .price-card.featured {
+      border-color: var(--green);
+      background: linear-gradient(135deg, rgba(126,211,33,.08), var(--card-bg));
+    }
+    .featured-badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: var(--green); color: var(--black);
+      font-size: .72rem; font-weight: 700;
+      padding: .3rem .9rem; border-radius: 50px;
+      text-transform: uppercase; letter-spacing: .06em;
+    }
+    .price-tier {
+      font-size: .8rem; text-transform: uppercase;
+      letter-spacing: .08em; color: var(--muted);
+      font-weight: 600; margin-bottom: .8rem;
+    }
+    .price-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem; font-weight: 800; color: var(--white);
+    }
+    .price-num sub { font-size: 1rem; color: var(--muted); }
+    .price-period { font-size: .85rem; color: var(--muted); margin-bottom: 1.5rem; }
+    .price-features { list-style: none; display: flex; flex-direction: column; gap: .7rem; margin-bottom: 1.8rem; }
+    .price-features li {
+      font-size: .88rem; display: flex; align-items: center; gap: .6rem;
+    }
+    .price-features li::before { content: '✓'; color: var(--green); font-weight: 700; }
+    .btn-plan {
+      display: block; text-align: center;
+      padding: .75rem; border-radius: 8px;
+      font-weight: 700; font-size: .9rem; text-decoration: none;
+      transition: opacity .2s;
+    }
+    .btn-plan-green { background: var(--green); color: var(--black); }
+    .btn-plan-outline { border: 1px solid var(--border); color: var(--text); }
+    .btn-plan:hover { opacity: .8; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--surface); }
+    .contact-layout {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: start; margin-top: 3rem;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 1.8rem; }
+    .contact-item { display: flex; gap: 1rem; align-items: flex-start; }
+    .c-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: rgba(126,211,33,.12);
+      display: grid; place-items: center;
+      font-size: 1.1rem; flex-shrink: 0;
+    }
+    .c-lbl { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: .2rem; }
+    .c-val { font-size: .95rem; font-weight: 500; }
+    .c-val a { color: var(--text); text-decoration: none; }
+    .c-val a:hover { color: var(--green); }
+
+    form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    label { font-size: .82rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    input, select, textarea {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px; padding: .8rem 1rem;
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: .95rem; outline: none;
+      transition: border-color .2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--green); }
+    select option { background: var(--card-bg); }
+    textarea { resize: vertical; min-height: 110px; }
+    .btn-submit {
+      background: var(--green); color: var(--black);
+      padding: .9rem; border: none; border-radius: 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer; transition: opacity .2s;
+    }
+    .btn-submit:hover { opacity: .85; }
+    .success-msg {
+      display: none; background: rgba(126,211,33,.1);
+      border: 1px solid var(--green); border-radius: 8px;
+      padding: 1rem; color: var(--green);
+      font-weight: 600; font-size: .9rem; text-align: center;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 5%; border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-copy { font-size: .82rem; color: var(--muted); }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: .82rem; color: var(--muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--green); }
+
+    /* ── BG DECORATION ── */
+    .bg-glow {
+      position: absolute; pointer-events: none;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(126,211,33,.06) 0%, transparent 70%);
+    }
+    .glow-1 { top: -200px; right: -150px; }
+    .glow-2 { bottom: -200px; left: -150px; }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 900px) {
+      nav ul, .nav-cta { display: none; }
+      .hamburger { display: flex; }
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .features-layout { grid-template-columns: 1fr; }
+      .audience-cards { grid-template-columns: 1fr; }
+      .contact-layout { grid-template-columns: 1fr; }
+      .hero-stats { gap: 1.2rem; }
+    }
+    @media(max-width: 600px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-mark">SC</div>
+    <div class="logo-text">Studo<span>Corp</span></div>
+  </div>
+  <ul>
+    <li><a href="#how">How it Works</a></li>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#audience">Who We Serve</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get Started</a>
+  <div class="hamburger" onclick="toggleMenu(this)">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag">🇰🇪 Nairobi, Kenya</div>
+      <h1>Student Travel,<br><em>Tracked & Safe.</em></h1>
+      <p class="hero-body">
+        StudoCorp empowers students, high schools, and parents to keep track of every journey. Know which bus, with whom, at what time — and when they arrive safely.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Register Your School</a>
+        <a href="#how" class="btn-outline">See How It Works</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">500+</div>
+          <div class="stat-lbl">Students Tracked</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">30+</div>
+          <div class="stat-lbl">Partner Schools</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-lbl">Safe Arrivals</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="tracker-card">
+        <div class="floating-badge">🟢 Live Tracking</div>
+        <h3>📍 Student Tracker</h3>
+        <div class="student-row">
+          <div>
+            <div class="s-name">Amina W.</div>
+            <div class="s-sub">Bus KBZ 123A • Westlands</div>
+          </div>
+          <span class="s-badge badge-transit">In Transit</span>
+        </div>
+        <div class="student-row">
+          <div>
+            <div class="s-name">Brian O.</div>
+            <div class="s-sub">Bus KCB 456B • Thika Rd</div>
+          </div>
+          <span class="s-badge badge-arrived">Arrived</span>
+        </div>
+        <div class="student-row">
+          <div>
+            <div class="s-name">Cynthia M.</div>
+            <div class="s-sub">Bus KDA 789C • Karen</div>
+          </div>
+          <span class="s-badge badge-boarding">Boarding</span>
+        </div>
+        <div class="map-preview">
+          <svg width="100%" height="100%" viewBox="0 0 300 110">
+            <polyline points="20,80 80,50 140,70 200,35 270,55" fill="none" stroke="#7ED321" stroke-width="2" stroke-dasharray="5,4"/>
+            <circle cx="20" cy="80" r="4" fill="#7ED321"/>
+            <circle cx="270" cy="55" r="4" fill="#7ED321"/>
+          </svg>
+          <div class="map-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="section-inner">
+    <div class="section-label">Process</div>
+    <h2>How StudoCorp Works</h2>
+    <p class="section-sub">A simple four-step process connecting schools, buses, students, and parents in real time.</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h4>School Registers</h4>
+        <p>Your school signs up and shares student lists. We onboard your transport partners and set up routes.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h4>Student is Assigned</h4>
+        <p>Each student is linked to a bus route. Parents receive login access to track their child's journey.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h4>Travel Begins</h4>
+        <p>At break time, students board their assigned bus. Live status updates are sent to parents and school admin.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h4>Safe Arrival Confirmed</h4>
+        <p>When a student reaches their destination, a confirmation is logged and the parent is notified instantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-label">Features</div>
+    <h2>Everything You Need to<br>Keep Students Safe</h2>
+    <div class="features-layout">
+      <div class="feature-list">
+        <div class="feature-item active">
+          <div class="feature-icon">📡</div>
+          <div>
+            <h4>Real-Time Bus Tracking</h4>
+            <p>Know exactly where every bus is at any moment during school breaks.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">🔔</div>
+          <div>
+            <h4>Parent Notifications</h4>
+            <p>Instant SMS and app alerts when a student boards, is in transit, or arrives.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">📋</div>
+          <div>
+            <h4>Admin Dashboard</h4>
+            <p>School administrators see all student movements in a single clean interface.</p>
+          </div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">💳</div>
+          <div>
+            <h4>Flexible Fare Payments</h4>
+            <p>Pay travel fares in full or in installments — anytime, at your convenience.</p>
+          </div>
+        </div>
+      </div>
+      <div class="feature-visual">
+        <div class="fv-header">🚌 Bus Route — KBZ 123A</div>
+        <div class="bus-route">
+          <div class="route-stop">
+            <div class="stop-dot filled"></div>
+            <span class="stop-name">Alliance High School</span>
+            <span class="stop-time">07:45 AM</span>
+          </div>
+          <div class="stop-line"></div>
+          <div class="route-stop">
+            <div class="stop-dot filled"></div>
+            <span class="stop-name">Westlands Stage</span>
+            <span class="stop-time">08:20 AM</span>
+          </div>
+          <div class="stop-line"></div>
+          <div class="route-stop">
+            <div class="stop-dot"></div>
+            <span class="stop-name">Nairobi CBD</span>
+            <span class="stop-time">08:55 AM</span>
+          </div>
+          <div class="stop-line"></div>
+          <div class="route-stop">
+            <div class="stop-dot"></div>
+            <span class="stop-name">Thika Road Terminal</span>
+            <span class="stop-time">09:30 AM</span>
+          </div>
+        </div>
+        <div style="margin-top:1.2rem;">
+          <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--muted);margin-bottom:.5rem;">
+            <span>Progress</span><span>62%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill"></div></div>
+        </div>
+        <div style="margin-top:1.2rem;padding:.9rem;background:rgba(126,211,33,.07);border-radius:10px;border:1px solid var(--border);">
+          <div style="font-size:.78rem;color:var(--muted);">Passengers Confirmed</div>
+          <div style="font-size:1.3rem;font-family:'Syne',sans-serif;font-weight:800;margin-top:.2rem;">23 / 37 students</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO WE SERVE -->
+<section id="audience">
+  <div class="section-inner">
+    <div class="section-label">Who We Serve</div>
+    <h2>Built for Everyone<br>in the Journey</h2>
+    <div class="audience-cards">
+      <div class="aud-card">
+        <div class="aud-icon">🎒</div>
+        <h3>Students</h3>
+        <p>A smooth, reliable travel experience from school to home and back — with no surprises and no extra charges at the gate.</p>
+      </div>
+      <div class="aud-card">
+        <div class="aud-icon">🏫</div>
+        <h3>Schools</h3>
+        <p>School administrators always know where their students are during break periods. Accountability at every step.</p>
+      </div>
+      <div class="aud-card">
+        <div class="aud-icon">👨‍👩‍👧</div>
+        <h3>Parents</h3>
+        <p>Peace of mind knowing exactly which bus took your child, who is with them, and a confirmation when they arrive safely.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-label">Pricing</div>
+    <h2>Simple, Transparent Plans</h2>
+    <p class="section-sub">No hidden fees. Pay per term or per year — and pay in installments if needed.</p>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Individual</div>
+        <div class="price-num"><sub>KES </sub>2,500</div>
+        <div class="price-period">per student / term</div>
+        <ul class="price-features">
+          <li>1 student tracked</li>
+          <li>Parent SMS alerts</li>
+          <li>Bus assignment</li>
+          <li>Installment payments</li>
+        </ul>
+        <a href="#contact" class="btn-plan btn-plan-outline">Get Started</a>
+      </div>
+      <div class="price-card featured">
+        <div class="featured-badge">Most Popular</div>
+        <div class="price-tier">School Partner</div>
+        <div class="price-num"><sub>KES </sub>1,800</div>
+        <div class="price-period">per student / term (min 20 students)</div>
+        <ul class="price-features">
+          <li>Unlimited students</li>
+          <li>Admin dashboard access</li>
+          <li>Parent portal</li>
+          <li>Real-time route tracking</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="#contact" class="btn-plan btn-plan-green">Partner With Us</a>
+      </div>
+      <div class="price-card">
+        <div class="price-tier">Enterprise</div>
+        <div class="price-num">Custom</div>
+        <div class="price-period">multi-school or corporate</div>
+        <ul class="price-features">
+          <li>Multi-school networks</li>
+          <li>Corporate transport</li>
+          <li>Custom integrations</li>
+          <li>Dedicated account manager</li>
+        </ul>
+        <a href="#contact" class="btn-plan btn-plan-outline">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label">Get In Touch</div>
+    <h2>Ready to Make Student<br>Travel Safer?</h2>
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="contact-item">
+          <div class="c-icon">📞</div>
+          <div>
+            <div class="c-lbl">Phone</div>
+            <div class="c-val"><a href="tel:+254718699516">+254 718 699 516</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="c-icon">📞</div>
+          <div>
+            <div class="c-lbl">Alternate</div>
+            <div class="c-val"><a href="tel:+254722686444">+254 722 686 444</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="c-icon">📬</div>
+          <div>
+            <div class="c-lbl">Postal Address</div>
+            <div class="c-val">P.O Box 2207-01000<br>Nairobi, Kenya 01000</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="c-icon">🌐</div>
+          <div>
+            <div class="c-lbl">Website</div>
+            <div class="c-val"><a href="http://www.kidticotravellinkers.com" target="_blank">kidticotravellinkers.com</a></div>
+          </div>
+        </div>
+        <div style="padding:1.4rem;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;">
+          <div style="font-size:.8rem;color:var(--muted);margin-bottom:.3rem;">Social</div>
+          <div style="display:flex;flex-direction:column;gap:.4rem;">
+            <span style="font-size:.9rem;">📘 kidtico travel linkers ltd.</span>
+            <span style="font-size:.9rem;">🐦 @TravelKidtico</span>
+            <span style="font-size:.9rem;">📸 @studocorp</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <form onsubmit="handleSubmit(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your name" required />
+          </div>
+          <div class="form-group">
+            <label>Phone / Email</label>
+            <input type="text" placeholder="+254 7XX XXX XXX or email" required />
+          </div>
+          <div class="form-group">
+            <label>I am a...</label>
+            <select>
+              <option value="">Select your role</option>
+              <option>Parent</option>
+              <option>School Administrator</option>
+              <option>Transport Partner</option>
+              <option>Corporate Client</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>School / Organisation</label>
+            <input type="text" placeholder="Name of school or organisation" />
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea placeholder="Tell us how we can help..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit">Send Message →</button>
+          <div class="success-msg" id="successMsg">✅ Message sent! We'll be in touch shortly.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="logo" style="margin-bottom:.4rem;">
+        <div class="logo-mark" style="width:28px;height:28px;font-size:.75rem;">SC</div>
+        <div class="logo-text" style="font-size:1rem;">Studo<span>Corp</span></div>
+      </div>
+      <div class="footer-copy">Formerly Kidtico Travel Linkers LLC<br>© 2024 StudoCorp. All rights reserved.</div>
+    </div>
+    <div class="footer-links">
+      <a href="#how">How It Works</a>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const msg = document.getElementById('successMsg');
+    msg.style.display = 'block';
+    e.target.reset();
+    setTimeout(() => msg.style.display = 'none', 5000);
+  }
+
+  function toggleMenu(el) {
+    el.classList.toggle('open');
+  }
+
+  // Smooth active state for feature items
+  document.querySelectorAll('.feature-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.feature-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Animate progress bar on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        document.querySelector('.progress-fill').style.width = '62%';
+      }
+    });
+  }, { threshold: 0.4 });
+  const prog = document.querySelector('.progress-bar');
+  if (prog) { document.querySelector('.progress-fill').style.width = '0'; observer.observe(prog); }
+</script>
+</body>
+</html>
